@@ -2,7 +2,7 @@
 
 Clojure project meant to show an example of using jutsu for nlp tasks such as doc2vec.
 
-# Tutorial
+# Usage
 
 If you want to follow along with me after downloading the code here are the steps
 
@@ -35,7 +35,7 @@ Install java:
 
 Install boot with this one liner bash command documented on the boot README
 
-sudo bash -c "cd /usr/local/bin && curl -fsSLo boot https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh && chmod 755 boot"
+`sudo bash -c "cd /usr/local/bin && curl -fsSLo boot https://github.com/boot-clj/boot-bin/releases/download/latest/boot.sh && chmod 755 boot"`
 
 You will need to create a boot.properties and set boot as root
 `echo "BOOT_AS_ROOT=yes" > boot.properties`
@@ -52,31 +52,17 @@ news-articles is the project name.
 
 Run `echo "BOOT_AS_ROOT=yes" > boot.properties` in your project directory
 
-Start up nightlight:
+Then connect to your remote machine it via ssh tunneling
 
-`boot night`
+`ssh -L 9002:localhost:4002 USERNAME@IP_ADDRESS`
 
-ssh -L 9000:localhost:4000 USERNAME@IP_ADDRESS
+Once you connect to the remote machine you should execute the code to generate the data:
 
-This will start nightlight on port 4000 and expose it on port 9000.
+`boot run`
 
-Then connect to it via ssh tunneling
+Wait for that to complete and you should see news-articles-graph-data.json in your current directory.
 
-ssh -L 9000:localhost:4000 :: -L 9001:localhost:4001 USERNAME@IP_ADDRESS
-
-Exposes multiple ssh tunnels to access nightlight and jutsu
-
-And access nightlight by typing localhost:9000 in your browser (this may take a couple seconds to load).
-
-This will allow you to run your code
-
-# Usage
-
-Run `boot night` to startup nightlight and begin editing your project in a browser.
-
-Execute the code to write the output data with `boot run`.
-
-To plot, run `boot repl` and execute this code in the repl like this:
+Then open up the REPL to view our plots using the generated data.
 
 ```clojure
 boot.user=> (require '[cheshire.core :as kitty])
@@ -88,9 +74,32 @@ nil
 boot.user=> (j/start-jutsu! 4002 false)
 Starting http-kit...
 "http://localhost:4002/"
+```
+
+Connect to jutsu by opening up http://localhost:9002 in your browser.
+
+Then execute the graph command in the repl for the plot to appear.
+```
 boot.user=> (j/graph! "News Articles" graph-data)
 1
 ```
+Your plot should look like this:
+
+![alt text](doc2vec.png)
+## Dev
+
+Start up nightlight:
+
+`boot night`
+
+This will start nightlight on port 4000 which we can access on port 9000.
+
+Type localhost:9000 in your browser (this may take a couple seconds to load).
+
+Then connect to it via ssh tunneling
+
+`ssh -L 9002:localhost:4002 USERNAME@IP_ADDRESS`
+
 
 ## License
 
